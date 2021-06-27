@@ -5,8 +5,9 @@ Created on Tue Jun 15 18:40:21    2021
 
 @author: kottilil dileep and team
 """
-
+import sys
 import numpy as np
+# import pandas as pd
 from numpy.core.defchararray import endswith
 from numpy.matrixlib.defmatrix import asmatrix
 from scipy.interpolate import interp1d
@@ -20,27 +21,68 @@ class multiopti:
       self.num = num
       np.set_printoptions(threshold=11)
       self.ad_freespace = 2.6544*1E-3 # optical admittance of free space
+      self.y1 = 0
+    def DBRplot(self):
+
+      
+      plt.axes
+      # self.thick_layer1
+      for i in range(self.DBR_per_up):
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.DBR_per_up, fc='blue',ec="red")
+        rectangle2 = plt.Rectangle((0,-y1-self.DBR_per_up), 50, -self.DBR_per_bot, fc='white',ec="black")
+
+        plt.gca().add_patch(rectangle1)
+        plt.gca().add_patch(rectangle2)
+        y1 = self.DBR_per_up+self.DBR_per_bot
+
+        plt.axis('scaled')
+
+      plt.tight_layout
+      plt.show()
+
+
 
     def Reverse(self,lst):
       new_lst = lst[::-1]
       return new_lst
+
+    def file_path(self,filepath, source1 = 'd'):
+      # self.filepath = filepath
+      self.file = open(filepath,"r")
+      print(filepath)
+      return
     
-    def ref_indx(self,e0 = 3,f = 10,gam = 0.02,exc = 2.238,draw = 0):
+    def ref_indx(self,source = 'theory', e0 = 3,f = 10,gam = 0.02,exc = 2.238,draw = 0):
+      self.source = source
+      if self.source =='theory':
+
+        self.omega = np.linspace(self.start,self.stop,self.num) #1,3
+        self.e0 = e0
+        self.f = f
+        self.gam = gam
+        self.exc = exc
     
-      self.omega = np.linspace(self.start,self.stop,self.num) #1,3
-    
-      self.e0 = e0
-      self.f = f
-      self.gam = gam
-      self.exc = exc
-  
-      self.eps = self.e0+(self.f/((self.exc**2-self.omega**2)-1j*self.gam*self.omega))
+        self.eps = self.e0+(self.f/((self.exc**2-self.omega**2)-1j*self.gam*self.omega))
+        
+        self.refidx = np.sqrt(self.eps)
+        self.n1 = np.real(self.refidx)
+        self.k1 = np.imag(self.refidx)
+        
+        self.file1_wav = 1240E-9/(self.omega) #in m
+
+      elif self.source == 'experiment':
+        # self.file
       
-      self.refidx = np.sqrt(self.eps)
-      self.n1 = np.real(self.refidx)
-      self.k1 = np.imag(self.refidx)
-      
-      self.file1_wav = 1240E-9/(self.omega) #in m
+        self.file.close
+        
+        return
+
+      elif self.source == 'none':
+        return
+
+      else:
+        print('ERROR: Enter the source as "experiment", "theory" or "none". ')
+        sys.exit
       
       if draw == 1:
          
@@ -53,9 +95,14 @@ class multiopti:
           return
       else:
           print('Enter either 0 or 1')
+    
+    def expt(self,):
+
+        return
         
     def EM(self,wl = 415, wg = 750, w_step = 1, pol = 1,angl = np.array([0,45]),
             angle_max = 80,angle_step = 1,draw = 0):
+            
         self.wavelength = (np.linspace(wl,wg,int(((wg-wl)/w_step)+1)))*1E-9 # in m
         self.ref_n1 = interp1d(self.Reverse(self.file1_wav), self.Reverse(self.n1),kind='cubic')(self.wavelength)
         self.ref_k1 = interp1d(self.Reverse(self.file1_wav), self.Reverse(self.k1),kind='cubic')(self.wavelength)
@@ -119,7 +166,7 @@ class multiopti:
         self.thick_layer4 = self.Bragg/(4*self.lr4_n) # in m
         self.thick_layer5 = self.Bragg/(4*self.lr5_n) # in m
 
-        self.tot_cav_thick = self.mode*(self.Bragg)/(2*self.cav_n)
+        self.tot_cav_thick = self.mode*(self.Bragg)/(2*self.cav_n) #thickness of total cavity inside DBRs
 
         self.cav_layer_thick = (1/(self.exc_num+1))*self.tot_cav_thick; #d excludes exciton thicknesses; Total thickness is excitons' thickness+tot_cav_thick
 
@@ -217,3 +264,5 @@ class multiopti:
       fig.colorbar(img)
       plt.tight_layout()
       plt.show()
+    
+    
