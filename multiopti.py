@@ -5,6 +5,7 @@ Created on Tue Jun 15 18:40:21    2021
 
 @author: kottilil dileep and team
 """
+import math
 import sys
 import numpy as np
 # import pandas as pd
@@ -21,43 +22,94 @@ class multiopti:
       self.num = num
       np.set_printoptions(threshold=11)
       self.ad_freespace = 2.6544*1E-3 # optical admittance of free space
+    
+    # def num_to_rgb(val, max_val=3):
+    #   i = (val * 255 / max_val)
+    #   r = round(math.sin(0.024 * i + 0) * 127 + 128)
+    #   g = round(math.sin(0.024 * i + 2) * 127 + 128
+    #   bw = round(math.sin(0.024 * i + 4) * 127 + 128)
+    #   return (r,g,b)
+    
+    def c_map(self,val):
       
+      tmax = 230
+      tmin = 15
+
+      mm = (val-self.rmin)/(self.rmax-self.rmin)*(tmax-tmin)+tmin
+      r = round(math.sin(0.024 * mm + 0) * 127 + 128)
+      g = round(math.sin(0.024 * mm + 2) * 127 + 128)
+      b = round(math.sin(0.024 * mm + 4) * 127 + 128)
+      return self.rgb2hex(r,g,b)
+
+    def rgb2hex(self,r,g,b):
+      r = int(r)
+      return "#{:02x}{:02x}{:02x}".format(r,g,b)
+
     def DBRplot(self):
       y1 = 0
-      
+      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
+      self.rmin = min(lst)
+      self.rmax = max(lst)
+
+      fig, ax = plt.subplots()
       plt.axes
       # self.thick_layer1
       for i in range(self.DBR_per_up):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.self.thick_layer1, fc='blue',ec="red")
-        rectangle2 = plt.Rectangle((0,-y1-self.self.thick_layer1), 50, -self.self.thick_layer2, fc='white',ec="black")
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
+        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
 
         plt.gca().add_patch(rectangle1)
         plt.gca().add_patch(rectangle2)
-        y1 = self.thick_layer1+self.thick_layer2
+
+        ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        ax.annotate(str(self.lr2_n), (55, -y1-self.thick_layer1-self.thick_layer2/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        y1 = y1+self.thick_layer1+self.thick_layer2
 
       
-      for i in range(self.DBR_per_bot):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc='white',ec="red")
+      for i in range(math.floor(self.cav_layers/2)):
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
 
         plt.gca().add_patch(rectangle1)
         plt.gca().add_patch(rectangle2)
-        y1 = self.cav_layer_thick+self.exc_thick
-
-        plt.axis('scaled')
+        
+        ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        y1 = y1+self.cav_layer_thick+self.exc_thick
+        
+      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
+      plt.gca().add_patch(rectangle2)
+      
+      ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+      
+      y1 = y1+self.cav_layer_thick
 
       
       for i in range(self.DBR_per_bot):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc='blue',ec="red")
-        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc='white',ec="black")
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
+        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc=self.c_map(self.lr5_n),ec="black")
 
         plt.gca().add_patch(rectangle1)
         plt.gca().add_patch(rectangle2)
-        y1 = self.thick_layer4+self.thick_layer5
 
-        plt.axis('scaled')
+        ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        ax.annotate(str(self.lr5_n), (55, -y1-self.thick_layer4-self.thick_layer5/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+
+        y1 = y1+self.thick_layer4+self.thick_layer5
+
+        # plt.axis('scaled')
 
       plt.tight_layout
+      plt.autoscale()
+      plt.axis("off")
+      plt.xlim(0,60)
       plt.show()
 
 
