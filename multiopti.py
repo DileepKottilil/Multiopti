@@ -21,19 +21,39 @@ class multiopti:
       self.num = num
       np.set_printoptions(threshold=11)
       self.ad_freespace = 2.6544*1E-3 # optical admittance of free space
-      self.y1 = 0
+      
     def DBRplot(self):
-
+      y1 = 0
       
       plt.axes
       # self.thick_layer1
       for i in range(self.DBR_per_up):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.DBR_per_up, fc='blue',ec="red")
-        rectangle2 = plt.Rectangle((0,-y1-self.DBR_per_up), 50, -self.DBR_per_bot, fc='white',ec="black")
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.self.thick_layer1, fc='blue',ec="red")
+        rectangle2 = plt.Rectangle((0,-y1-self.self.thick_layer1), 50, -self.self.thick_layer2, fc='white',ec="black")
 
         plt.gca().add_patch(rectangle1)
         plt.gca().add_patch(rectangle2)
-        y1 = self.DBR_per_up+self.DBR_per_bot
+        y1 = self.thick_layer1+self.thick_layer2
+
+      
+      for i in range(self.DBR_per_bot):
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc='white',ec="red")
+        rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
+
+        plt.gca().add_patch(rectangle1)
+        plt.gca().add_patch(rectangle2)
+        y1 = self.cav_layer_thick+self.exc_thick
+
+        plt.axis('scaled')
+
+      
+      for i in range(self.DBR_per_bot):
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc='blue',ec="red")
+        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc='white',ec="black")
+
+        plt.gca().add_patch(rectangle1)
+        plt.gca().add_patch(rectangle2)
+        y1 = self.thick_layer4+self.thick_layer5
 
         plt.axis('scaled')
 
