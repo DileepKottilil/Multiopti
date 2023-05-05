@@ -3,7 +3,7 @@
 """
 Created on Tue Jun 15 18:40:21    2021
 
-@author: kottilil dileep and team
+@author: kottilil dileep
 """
 import math
 import sys
@@ -22,114 +22,6 @@ class multiopti:
       self.num = num
       np.set_printoptions(threshold=11)
       self.ad_freespace = 2.6544*1E-3 # optical admittance of free space
-
-    
-    def c_map(self,val):
-      
-      tmax = 230
-      tmin = 15
-
-      mm = (val-self.rmin)/(self.rmax-self.rmin)*(tmax-tmin)+tmin
-      r = round(math.sin(0.024 * mm + 0) * 127 + 128)
-      g = round(math.sin(0.024 * mm + 2) * 127 + 128)
-      b = round(math.sin(0.024 * mm + 4) * 127 + 128)
-      return self.rgb2hex(r,g,b)
-
-    def rgb2hex(self,r,g,b):
-      r = int(r)
-      return "#{:02x}{:02x}{:02x}".format(r,g,b)
-
-    def DBRplot(self):
-      y1 = 0
-      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
-      self.rmin = min(lst)
-      self.rmax = max(lst)
-
-      fig, ax = plt.subplots()
-      plt.axes
-      # self.thick_layer1
-      ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-      for i in range(self.DBR_per_up):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
-        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
-
-        plt.gca().add_patch(rectangle1)
-        plt.gca().add_patch(rectangle2)
-
-        ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        ax.annotate(str(self.lr2_n), (55, -y1-self.thick_layer1-self.thick_layer2/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        y1 = y1+self.thick_layer1+self.thick_layer2
-
-      if self.exc_num != 0 and self.exc_thick != 0:
-
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
-          rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
-
-          plt.gca().add_patch(rectangle1)
-          plt.gca().add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick+self.exc_thick
-      
-      elif self.exc_num == 0 or self.exc_thick == 0:
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-          # rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
-
-          plt.gca().add_patch(rectangle1)
-          # plt.gca().add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          # ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  # fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick
-
-        
-      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-      plt.gca().add_patch(rectangle2)
-      
-      ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-      
-      y1 = y1+self.cav_layer_thick
-
-      
-      for i in range(self.DBR_per_bot):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
-        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc=self.c_map(self.lr5_n),ec="black")
-
-        plt.gca().add_patch(rectangle1)
-        plt.gca().add_patch(rectangle2)
-
-        ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        ax.annotate(str(self.lr5_n), (55, -y1-self.thick_layer4-self.thick_layer5/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-
-        y1 = y1+self.thick_layer4+self.thick_layer5
-
-        # plt.axis('scaled')
-      ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-
-      
-      plt.tight_layout
-      plt.autoscale()
-      # plt.axis("off")
-      plt.xlim(0,70)
-      # plt.ylim(-10,10)
-
-      plt.show()
-
-
 
     def Reverse(self,lst):
       new_lst = lst[::-1]
@@ -365,29 +257,4 @@ class multiopti:
       plt.show()
       #return fig, ax
     
-    def plot_0Deg(self):
-
-      fig1,ax = plt.subplots(1,1)
-      
-      
-      aa, bb = self.Reflectivity.shape
-      self.Deg0 = self.Reflectivity[:,bb//2]
-      plt.plot(1240*1E-9/self.wavelength,self.Deg0)
-      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      ax.set_ylim(ymin=-0.1, ymax = 0.1)
-      ax.set_xlabel('Energy(eV)')
-      ax.set_ylabel('Reflectivity (a.u.)')
-      
-
-      #fig.colorbar(img)
-      plt.tight_layout()
-      plt.show()
     
-    def save_text(self):
-
-      aa, bb = self.Reflectivity.shape
-      Deg0 = self.Reflectivity[:,bb//2]
-      arr = np.transpose(np.vstack((self.wavelength,Deg0)))
-
-      np.savetxt("Deg0.txt", arr)

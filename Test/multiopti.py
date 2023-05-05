@@ -22,7 +22,13 @@ class multiopti:
       self.num = num
       np.set_printoptions(threshold=11)
       self.ad_freespace = 2.6544*1E-3 # optical admittance of free space
-
+    
+    # def num_to_rgb(val, max_val=3):
+    #   i = (val * 255 / max_val)
+    #   r = round(math.sin(0.024 * i + 0) * 127 + 128)
+    #   g = round(math.sin(0.024 * i + 2) * 127 + 128
+    #   bw = round(math.sin(0.024 * i + 4) * 127 + 128)
+    #   return (r,g,b)
     
     def c_map(self,val):
       
@@ -48,8 +54,6 @@ class multiopti:
       fig, ax = plt.subplots()
       plt.axes
       # self.thick_layer1
-      ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
       for i in range(self.DBR_per_up):
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
@@ -63,37 +67,21 @@ class multiopti:
                  fontsize=6, ha='center', va='center')
         y1 = y1+self.thick_layer1+self.thick_layer2
 
-      if self.exc_num != 0 and self.exc_thick != 0:
-
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
-          rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
-
-          plt.gca().add_patch(rectangle1)
-          plt.gca().add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick+self.exc_thick
       
-      elif self.exc_num == 0 or self.exc_thick == 0:
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-          # rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
+      for i in range(math.floor(self.cav_layers/2)):
+        rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
+        rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
 
-          plt.gca().add_patch(rectangle1)
-          # plt.gca().add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          # ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  # fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick
-
+        plt.gca().add_patch(rectangle1)
+        plt.gca().add_patch(rectangle2)
         
-      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
+        ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+        y1 = y1+self.cav_layer_thick+self.exc_thick
+        
+      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
       plt.gca().add_patch(rectangle2)
       
       ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
@@ -117,16 +105,11 @@ class multiopti:
         y1 = y1+self.thick_layer4+self.thick_layer5
 
         # plt.axis('scaled')
-      ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
 
-      
       plt.tight_layout
       plt.autoscale()
-      # plt.axis("off")
-      plt.xlim(0,70)
-      # plt.ylim(-10,10)
-
+      plt.axis("off")
+      plt.xlim(0,60)
       plt.show()
 
 
@@ -245,17 +228,11 @@ class multiopti:
         self.up_DBR_indx = np.vstack((self.lr1_n*np.ones((1,len(self.wavelength))),self.lr2_n*np.ones((1,len(self.wavelength)))))
         self.lw_DBR_indx = np.vstack((self.lr4_n*np.ones((1,len(self.wavelength))),self.lr5_n*np.ones((1,len(self.wavelength)))))
 
-        if self.exc_num !=0:
-
-          self.indx_mat = np.vstack((self.air_n_real_mat,self.up_DBR_indx,
-                    np.vstack((self.cav_indices,)*self.exc_num),
-                    self.cav_n*np.ones((1,len(self.wavelength))),
-                    self.lw_DBR_indx,self.sub_mat)) #shape is (11,301) for default values
-        else:
-          self.indx_mat = np.vstack((self.air_n_real_mat,self.up_DBR_indx,
-                    self.cav_n*np.ones((1,len(self.wavelength))),
-                    self.lw_DBR_indx,self.sub_mat))
-
+        self.indx_mat = np.vstack((self.air_n_real_mat,self.up_DBR_indx,
+                  np.vstack((self.cav_indices,)*self.exc_num),
+                  self.cav_n*np.ones((1,len(self.wavelength))),
+                  self.lw_DBR_indx,self.sub_mat)) #shape is (11,301) for default values
+       
         self.thick_layer1 = self.Bragg/(4*self.lr1_n) # in m
         self.thick_layer2 = self.Bragg/(4*self.lr2_n) # in m
         self.thick_layer4 = self.Bragg/(4*self.lr4_n) # in m
@@ -266,15 +243,11 @@ class multiopti:
         self.cav_layer_thick = (1/(self.exc_num+1))*self.tot_cav_thick; #d excludes exciton thicknesses; Total thickness is excitons' thickness+tot_cav_thick
 
         self.cav_thick_mat = np.vstack((self.cav_layer_thick,self.exc_thick)) #2x1
-        
-        if self.exc_num!=0:
 
-          self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
+        self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
                   np.vstack((self.cav_thick_mat,)*self.exc_num),
                   self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
-        else:
-          self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
-                  self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
+
 
     def calc(self):
 
@@ -363,31 +336,5 @@ class multiopti:
       fig.colorbar(img)
       plt.tight_layout()
       plt.show()
-      #return fig, ax
     
-    def plot_0Deg(self):
-
-      fig1,ax = plt.subplots(1,1)
-      
-      
-      aa, bb = self.Reflectivity.shape
-      self.Deg0 = self.Reflectivity[:,bb//2]
-      plt.plot(1240*1E-9/self.wavelength,self.Deg0)
-      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      ax.set_ylim(ymin=-0.1, ymax = 0.1)
-      ax.set_xlabel('Energy(eV)')
-      ax.set_ylabel('Reflectivity (a.u.)')
-      
-
-      #fig.colorbar(img)
-      plt.tight_layout()
-      plt.show()
     
-    def save_text(self):
-
-      aa, bb = self.Reflectivity.shape
-      Deg0 = self.Reflectivity[:,bb//2]
-      arr = np.transpose(np.vstack((self.wavelength,Deg0)))
-
-      np.savetxt("Deg0.txt", arr)
