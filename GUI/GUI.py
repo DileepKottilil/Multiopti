@@ -4,6 +4,9 @@ import multiopti as mop
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+#from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
+#Dileep
+
 # Function to execute when the "Plot" button is clicked
 def plot_result():
     # Create an instance of the multiopti class
@@ -34,13 +37,38 @@ def plot_result():
     mo.calc()
     
     # Plot the result
-    fig, ax = plt.subplots()
-    mo.plot_reslt()
+    #fig, ax = plt.subplots()
+    #fig = Figure(figsize=(5, 4), dpi=100)
+    #mo.plot_reslt(fig)
+
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
+
+    extend, Reflectivity = mo.plot_reslt()
+    
+    fig,ax= plt.subplots(1,1)
+       
+    #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+    img = ax.imshow(Reflectivity,extent = extend,aspect = 'auto')
+    ax.set_xlabel('Angle(deg)')
+    ax.set_ylabel('Photon Energy (eV')
+
+    fig.colorbar(img)
+    plt.tight_layout()
+    plt.show()
+
+     # Clear the right pane
+    for widget in right_pane.winfo_children():
+        widget.destroy()
 
     # Display the plot in the right pane
     canvas = FigureCanvasTkAgg(fig, master=right_pane)
     canvas.draw()
     canvas.get_tk_widget().grid(row=0, column=0)
+
+
+    
+
 
 # Create the main window
 root = tk.Tk()
@@ -90,12 +118,12 @@ mode_var.set("10")
 air_n_var.set("1")
 DBR_per_up_var.set("4")
 DBR_per_bot_var.set("4")
-lr1_n_var.set("3")
-lr2_n_var.set("1")
-cav_n_var.set("1.2")
-lr4_n_var.set("10")
-lr5_n_var.set("2")
-sub_n_var.set("1")
+lr1_n_var.set("1.5")
+lr2_n_var.set("2")
+cav_n_var.set("1.5")
+lr4_n_var.set("2")
+lr5_n_var.set("1.5")
+sub_n_var.set("1.5")
 exc_num_var.set("0")
 exc_thick_var.set("0")
 

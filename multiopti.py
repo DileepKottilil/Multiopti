@@ -352,6 +352,8 @@ class multiopti:
         
     def plot_reslt(self):
 
+      #fig,ax= plt.subplots(1,1)
+
       fig,ax= plt.subplots(1,1)
       
       
@@ -363,7 +365,23 @@ class multiopti:
       fig.colorbar(img)
       plt.tight_layout()
       plt.show()
-      #return fig, ax
+      
+      """ extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+      
+      return extend, self.Reflectivity  """
+      
+      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
+      #return img
+      
+      
+      #ax.set_xlabel('Angle(degree)')
+      #ax.set_ylabel('Photon Energy (eV')
+
+      #fig.colorbar(img)
+      #plt.tight_layout()
+      #plt.show()
+
+      
     
     def plot_0Deg(self):
 
@@ -375,7 +393,7 @@ class multiopti:
       plt.plot(1240*1E-9/self.wavelength,self.Deg0)
       #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
       #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      ax.set_ylim(ymin=-0.1, ymax = 0.1)
+      #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Energy(eV)')
       ax.set_ylabel('Reflectivity (a.u.)')
       
