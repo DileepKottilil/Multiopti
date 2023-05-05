@@ -350,11 +350,24 @@ class multiopti:
           
           self.z = 1 + self.z
         
-    def plot_reslt(self):
+    def plot_reslt(self,ax=None):
 
-      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+      if ax is None:
+            fig, ax = plt.subplots(1, 1)
+      else:
+            fig = ax.figure
+
+      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
       
-      return extend, self.Reflectivity 
+      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+      img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
+      ax.set_xlabel('Angle(degree)')
+      ax.set_ylabel('Photon Energy (eV')
+
+      fig.colorbar(img)
+
+
+      return fig,ax 
       
       
       

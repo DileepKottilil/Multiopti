@@ -44,18 +44,23 @@ def plot_result():
     #fig = plt.figure()
     #ax = fig.add_subplot(111)
 
-    extend, Reflectivity = mo.plot_reslt()
-    
-    fig,ax= plt.subplots(1,1)
-       
-    #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-    img = ax.imshow(Reflectivity,extent = extend,aspect = 'auto')
-    ax.set_xlabel('Angle(deg)')
-    ax.set_ylabel('Photon Energy (eV')
 
-    fig.colorbar(img)
-    plt.tight_layout()
-    plt.show()
+    fig, ax = plt.subplots(1, 1)
+    fig, ax = mo.plot_reslt(ax)
+    fig.tight_layout()  
+
+    # extend, Reflectivity = mo.plot_reslt()
+    
+    # fig,ax= plt.subplots(1,1)
+       
+    # #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+    # img = ax.imshow(Reflectivity,extent = extend,aspect = 'auto')
+    # ax.set_xlabel('Angle(deg)')
+    # ax.set_ylabel('Photon Energy (eV')
+
+    # fig.colorbar(img)
+    # plt.tight_layout()
+    # plt.show()
 
      # Clear the right pane
     for widget in right_pane.winfo_children():
@@ -65,6 +70,7 @@ def plot_result():
     canvas = FigureCanvasTkAgg(fig, master=right_pane)
     canvas.draw()
     canvas.get_tk_widget().grid(row=0, column=0)
+
 
 
     
