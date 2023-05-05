@@ -3,6 +3,7 @@ from tkinter import ttk
 import multiopti as mop
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.gridspec as gridspec
 
 #from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 #Dileep
@@ -35,32 +36,25 @@ def plot_result():
            exc_num, exc_thick)
 
     mo.calc()
+
+
+
+    #fig, ax = plt.subplots(1, 1)
+    #fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
     
-    # Plot the result
-    #fig, ax = plt.subplots()
-    #fig = Figure(figsize=(5, 4), dpi=100)
-    #mo.plot_reslt(fig)
+    fig = plt.figure(figsize=(12, 6))
+    gs = gridspec.GridSpec(2, 2, figure=fig, width_ratios=[2, 1], height_ratios=[1, 1])
+    ax1 = fig.add_subplot(gs[:, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[1, 1])
 
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111)
+    fig, ax1 = mo.plot_reslt(ax1)
+    fig, ax2 = mo.plot_0Deg(ax2)
+    #fig, ax3 = mo.DBRplot(ax3)
 
-
-    fig, ax = plt.subplots(1, 1)
-    fig, ax = mo.plot_reslt(ax)
     fig.tight_layout()  
 
-    # extend, Reflectivity = mo.plot_reslt()
-    
-    # fig,ax= plt.subplots(1,1)
-       
-    # #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-    # img = ax.imshow(Reflectivity,extent = extend,aspect = 'auto')
-    # ax.set_xlabel('Angle(deg)')
-    # ax.set_ylabel('Photon Energy (eV')
-
-    # fig.colorbar(img)
-    # plt.tight_layout()
-    # plt.show()
+   
 
      # Clear the right pane
     for widget in right_pane.winfo_children():

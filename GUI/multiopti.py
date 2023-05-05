@@ -39,7 +39,12 @@ class multiopti:
       r = int(r)
       return "#{:02x}{:02x}{:02x}".format(r,g,b)
 
-    def DBRplot(self):
+    def DBRplot(self,ax = None):
+      if ax is None:
+            fig, ax = plt.subplots(1, 2)
+      else:
+            fig = ax.figure
+
       y1 = 0
       lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
       self.rmin = min(lst)
@@ -120,14 +125,15 @@ class multiopti:
       ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
 
-      
-      plt.tight_layout
+      return fig, ax
+    
+      """plt.tight_layout
       plt.autoscale()
-      # plt.axis("off")
+      
       plt.xlim(0,70)
-      # plt.ylim(-10,10)
+      
 
-      plt.show()
+      plt.show()"""
 
 
 
@@ -350,7 +356,7 @@ class multiopti:
           
           self.z = 1 + self.z
         
-    def plot_reslt(self,ax=None):
+    def plot_reslt(self,ax = None):
 
       if ax is None:
             fig, ax = plt.subplots(1, 1)
@@ -367,41 +373,31 @@ class multiopti:
       fig.colorbar(img)
 
 
-      return fig,ax 
+      return fig, ax 
       
       
       
-      """ fig,ax= plt.subplots(1,1)
-      
-      
-      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      ax.set_xlabel('Angle(degree)')
-      ax.set_ylabel('Photon Energy (eV')
-
-      fig.colorbar(img)
-      plt.tight_layout()
-      plt.show() """
-      #return fig, ax
     
-    def plot_0Deg(self):
-
-      fig1,ax = plt.subplots(1,1)
+    
+    def plot_0Deg(self, ax = None):
+      
+      if ax is None:
+            fig, ax = plt.subplots(1, 2)
+      else:
+            fig = ax.figure
+      
       
       
       aa, bb = self.Reflectivity.shape
       self.Deg0 = self.Reflectivity[:,bb//2]
       plt.plot(1240*1E-9/self.wavelength,self.Deg0)
-      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      ax.set_ylim(ymin=-0.1, ymax = 0.1)
+      
+      #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Energy(eV)')
       ax.set_ylabel('Reflectivity (a.u.)')
-      
+      return fig, ax
 
-      #fig.colorbar(img)
-      plt.tight_layout()
-      plt.show()
+     
     
     def save_text(self):
 
