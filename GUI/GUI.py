@@ -37,9 +37,6 @@ def plot_result():
 
     mo.calc()
 
-
-
-    
     fig = plt.figure(figsize=(12, 6))
     gs = gridspec.GridSpec(2, 2, figure=fig, width_ratios=[2, 1], height_ratios=[1, 1])
     ax1 = fig.add_subplot(gs[:, 0])
@@ -50,7 +47,7 @@ def plot_result():
     fig, ax2 = mo.plot_0Deg(ax2)
     fig, ax3 = mo.DBRplot(ax3)
 
-    fig.tight_layout()  
+    #fig.tight_layout()  
 
    
 

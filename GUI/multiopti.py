@@ -130,6 +130,8 @@ class multiopti:
         # plt.axis('scaled')
       ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
+      ax.autoscale()
+      ax.set_xlim(0,70)
 
       return fig, ax
     
@@ -365,7 +367,7 @@ class multiopti:
     def plot_reslt(self,ax = None):
 
       if ax is None:
-            fig, ax = plt.subplots(1, 1)
+            fig, ax = plt.subplots()
       else:
             fig = ax.figure
 
@@ -376,7 +378,9 @@ class multiopti:
       ax.set_xlabel('Angle(degree)')
       ax.set_ylabel('Photon Energy (eV')
 
-      fig.colorbar(img)
+      cbar_ax = fig.add_axes([0.05, 0.05, 0.025, 0.25])  # <-- added this line
+      fig.colorbar(img, cax=cbar_ax)  # <-- modified this line
+      #fig.colorbar(img, )
 
 
       return fig, ax 
@@ -388,7 +392,7 @@ class multiopti:
     def plot_0Deg(self, ax = None):
       
       if ax is None:
-            fig, ax = plt.subplots(1, 2)
+            fig, ax = plt.subplots()
       else:
             fig = ax.figure
       
@@ -396,7 +400,7 @@ class multiopti:
       
       aa, bb = self.Reflectivity.shape
       self.Deg0 = self.Reflectivity[:,bb//2]
-      plt.plot(1240*1E-9/self.wavelength,self.Deg0)
+      ax.plot(1240*1E-9/self.wavelength,self.Deg0)
       
       #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Energy(eV)')
