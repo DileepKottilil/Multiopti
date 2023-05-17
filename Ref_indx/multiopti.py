@@ -311,7 +311,7 @@ class multiopti:
         else:
           self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
                   self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
-        return self.tot_cav_thick, (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick
+        return self.tot_cav_thick, (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick, self.thick_layer1,self.thick_layer2,self.thick_layer4,self.thick_layer5 
     def calc(self):
 
 
@@ -395,12 +395,20 @@ class multiopti:
 
       #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
       
-      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+      #for plotting in energy 
+      # extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
+      # img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
+      # ax.set_xlabel('Angle(degree)')
+      # ax.set_ylabel('Photon Energy (eV)')
+
+      #for plottingin wavelenth. extend is setting x y limits for axes
+      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,self.wavelength[0],self.wavelength[len(self.wavelength)-1]]
       img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
       ax.set_xlabel('Angle(degree)')
-      ax.set_ylabel('Photon Energy (eV')
+      ax.set_ylabel('Wavelength (nm)')
 
-      cbar_ax = fig.add_axes([0.05, 0.05, 0.025, 0.25])  # <-- added this line
+      #colorbar axis
+      cbar_ax = fig.add_axes([0.025, 0.025, 0.025, 0.25])  # <-- added this line
       fig.colorbar(img, cax=cbar_ax)  # <-- modified this line
       #fig.colorbar(img, )
 
@@ -422,10 +430,10 @@ class multiopti:
       
       aa, bb = self.Reflectivity.shape
       self.Deg0 = self.Reflectivity[:,bb//2]
-      ax.plot(1240*1E-9/self.wavelength,self.Deg0)
+      ax.plot(self.wavelength*1E6,self.Deg0)
       
       #ax.set_ylim(ymin=-0.1, ymax = 0.1)
-      ax.set_xlabel('Energy(eV)')
+      ax.set_xlabel('Wavelength (um)')
       ax.set_ylabel('Reflectivity (a.u.)')
       return fig, ax
 

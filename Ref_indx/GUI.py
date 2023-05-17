@@ -13,7 +13,7 @@ def plot_result():
     # Create an instance of the multiopti class by Dileep
     mo = mop.multiopti(0.1, 3, 200) #1 eV to 3 eV only for plotting and extrapolating r.i. values. it has no influence on the ARR
     mo.ref_indx(source='theory',draw=0)
-    mo.EM(wl = 1050,wg = 2400, w_step = 1, angle_max = 10, angle_step = 1)
+    mo.EM(wl = 1050,wg = 2400, w_step = 1, angle_max = 40, angle_step = 1)
 
     # Get values from the input fields
     Bragg = float(Bragg_var.get())
@@ -34,11 +34,11 @@ def plot_result():
     # brg_cav_thick is cavity designed for Braggs wavelength w/o exciton.
     # act_cav_thick is actual cavity length with exciton layers.
     # When no excitons both of these shoudl be same.
-    a,b = mo.DBR(Bragg, mode, air_n, DBR_per_up, DBR_per_bot,
+    a, b, lr1, lr2, lr4, lr5 = mo.DBR(Bragg, mode, air_n, DBR_per_up, DBR_per_bot,
            lr1_n, lr2_n, cav_n, lr4_n, lr5_n, sub_n,
            exc_num, exc_thick)
     
-    print (a,b)
+    #print (a,b, lr4, lr5)
     
     mo.calc()
 
@@ -118,11 +118,11 @@ plot_button.grid(row=len(inputs), columnspan=2, pady=10)
 Bragg_var.set("1550")
 mode_var.set("1")
 air_n_var.set("1")
-DBR_per_up_var.set("3")
+DBR_per_up_var.set("0")
 DBR_per_bot_var.set("3")
 lr1_n_var.set("1.4")
 lr2_n_var.set("2.2")
-cav_n_var.set("1.5")
+cav_n_var.set("1")
 lr4_n_var.set("2.2")
 lr5_n_var.set("1.4")
 sub_n_var.set("1.5")
