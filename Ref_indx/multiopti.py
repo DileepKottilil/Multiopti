@@ -39,14 +39,22 @@ class multiopti:
       r = int(r)
       return "#{:02x}{:02x}{:02x}".format(r,g,b)
 
-    def DBRplot(self):
+    def DBRplot(self,ax = None):
+      if ax is None:
+            fig, ax = plt.subplots()
+      else:
+            fig = ax.figure
+
       y1 = 0
       lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
       self.rmin = min(lst)
       self.rmax = max(lst)
 
-      fig, ax = plt.subplots()
-      plt.axes
+      #fig, ax = plt.subplots()
+      #plt.axes
+
+      #ax.axes
+
       # self.thick_layer1
       ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
@@ -54,8 +62,11 @@ class multiopti:
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
 
-        plt.gca().add_patch(rectangle1)
-        plt.gca().add_patch(rectangle2)
+        #plt.gca().add_patch(rectangle1)
+        #plt.gca().add_patch(rectangle2)
+
+        ax.add_patch(rectangle1)
+        ax.add_patch(rectangle2)
 
         ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
@@ -69,8 +80,8 @@ class multiopti:
           rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
           rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
 
-          plt.gca().add_patch(rectangle1)
-          plt.gca().add_patch(rectangle2)
+          ax.add_patch(rectangle1)
+          ax.add_patch(rectangle2)
           
           ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
                   fontsize=6, ha='center', va='center')
@@ -83,7 +94,7 @@ class multiopti:
           rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
           # rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
 
-          plt.gca().add_patch(rectangle1)
+          ax.add_patch(rectangle1)
           # plt.gca().add_patch(rectangle2)
           
           ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
@@ -94,7 +105,7 @@ class multiopti:
 
         
       rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-      plt.gca().add_patch(rectangle2)
+      ax.add_patch(rectangle2)
       
       ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
@@ -106,8 +117,8 @@ class multiopti:
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc=self.c_map(self.lr5_n),ec="black")
 
-        plt.gca().add_patch(rectangle1)
-        plt.gca().add_patch(rectangle2)
+        ax.add_patch(rectangle1)
+        ax.add_patch(rectangle2)
 
         ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
@@ -119,15 +130,18 @@ class multiopti:
         # plt.axis('scaled')
       ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
+      ax.autoscale()
+      ax.set_xlim(0,70)
 
-      
-      plt.tight_layout
+      return fig, ax
+    
+      """plt.tight_layout
       plt.autoscale()
-      # plt.axis("off")
+      
       plt.xlim(0,70)
-      # plt.ylim(-10,10)
+      
 
-      plt.show()
+      plt.show()"""
 
 
 
@@ -174,19 +188,25 @@ class multiopti:
         sys.exit
       
       if draw == 1:
+         
+
           fig, ax = plt.subplots()
 
-          #plt.figure()
-          ax.plot(self.file1_wav,self.n1)
-          ax.plot(self.file1_wav, self.k1)
+          ax.plot(self.file1_wav, self.n1, label='Dataset 1')
+          ax.plot(self.file1_wav, self.k1, label='Dataset 2')
+
+          # Set auto scale for both plots
           ax.autoscale(enable=True, axis='both', tight=True)
 
           ax.set_xlabel('Energy in EV')
           ax.set_ylabel('Refractive Index')
-          ax.set_title('Real and complex r.i.')
+          ax.set_title('Real and Complex r.i.')
           ax.legend()
+
           plt.show()
-          
+          # plt.figure()
+          # plt.plot(self.file1_wav,self.n1)
+          # plt.show()
           print('Dileep')
 
       elif draw == 0:
@@ -359,57 +379,50 @@ class multiopti:
           
           self.z = 1 + self.z
         
-    def plot_reslt(self):
+    def plot_reslt(self,ax = None):
 
-      #fig,ax= plt.subplots(1,1)
+      if ax is None:
+            fig, ax = plt.subplots()
+      else:
+            fig = ax.figure
 
-      fig,ax= plt.subplots(1,1)
-      
+      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
       
       extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
       img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
       ax.set_xlabel('Angle(degree)')
       ax.set_ylabel('Photon Energy (eV')
 
-      fig.colorbar(img)
-      plt.tight_layout()
-      plt.show()
-      
-      """ extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      
-      return extend, self.Reflectivity  """
-      
-      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
-      #return img
-      
-      
-      #ax.set_xlabel('Angle(degree)')
-      #ax.set_ylabel('Photon Energy (eV')
+      cbar_ax = fig.add_axes([0.05, 0.05, 0.025, 0.25])  # <-- added this line
+      fig.colorbar(img, cax=cbar_ax)  # <-- modified this line
+      #fig.colorbar(img, )
 
-      #fig.colorbar(img)
-      #plt.tight_layout()
-      #plt.show()
 
+      return fig, ax 
+      
+      
       
     
-    def plot_0Deg(self):
-
-      fig1,ax = plt.subplots(1,1)
+    
+    def plot_0Deg(self, ax = None):
+      
+      if ax is None:
+            fig, ax = plt.subplots()
+      else:
+            fig = ax.figure
+      
       
       
       aa, bb = self.Reflectivity.shape
       self.Deg0 = self.Reflectivity[:,bb//2]
-      plt.plot(1240*1E-9/self.wavelength,self.Deg0)
-      #extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,1240*1E-9/self.wavelength[len(self.wavelength)-1],1240*1E-9/self.wavelength[0]]
-      #img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
+      ax.plot(1240*1E-9/self.wavelength,self.Deg0)
+      
       #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Energy(eV)')
       ax.set_ylabel('Reflectivity (a.u.)')
-      
+      return fig, ax
 
-      #fig.colorbar(img)
-      plt.tight_layout()
-      plt.show()
+     
     
     def save_text(self):
 
