@@ -11,7 +11,7 @@ import matplotlib.gridspec as gridspec
 # Function to execute when the "Plot" button is clicked
 def plot_result():
     # Create an instance of the multiopti class by Dileep
-    mo = mop.multiopti(0.1, 3, 200) #1 eV to 3 eV
+    mo = mop.multiopti(0.5, 3, 200) #1 eV to 3 eV
     mo.ref_indx(source='theory',draw=1)
     mo.EM()
 
