@@ -291,10 +291,17 @@ class multiopti:
         self.thick_layer5 = self.Bragg/(4*self.lr5_n) # in m
 
         self.tot_cav_thick = self.mode*(self.Bragg)/(2*self.cav_n) #thickness of total cavity inside DBRs
-
+        print('Braggs cavity thickness (no DBR) : ', self.tot_cav_thick)
+        #When exc_num is placed, total cavity length (tot_cav_thcik), is divided into 
+        #equally (1/(self.exc_num+1)) parts. That's now effective cavity length is 
+        # (1/(self.exc_num+1))*self.tot_cav_thick + exciton thickness of one layer * exc_num
+        
+        #self.cav_layer_thick is 1/3 of total Braggs cavity thickness (i.e. self.tot_cav_thick).
         self.cav_layer_thick = (1/(self.exc_num+1))*self.tot_cav_thick; #d excludes exciton thicknesses; Total thickness is excitons' thickness+tot_cav_thick
 
+        #self.cav_thick_mat is a pair of '1/3 of the Braggs cavity thickness and exciton layer thickenss'
         self.cav_thick_mat = np.vstack((self.cav_layer_thick,self.exc_thick)) #2x1
+        print('Original cavity thickness including all the exciton layers (no DBR): ', (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick)
         
         if self.exc_num!=0:
 
@@ -304,7 +311,7 @@ class multiopti:
         else:
           self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
                   self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
-
+        return self.tot_cav_thick, (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick
     def calc(self):
 
 

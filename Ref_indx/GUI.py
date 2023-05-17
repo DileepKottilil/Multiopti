@@ -11,9 +11,9 @@ import matplotlib.gridspec as gridspec
 # Function to execute when the "Plot" button is clicked
 def plot_result():
     # Create an instance of the multiopti class by Dileep
-    mo = mop.multiopti(0.5, 3, 200) #1 eV to 3 eV
-    mo.ref_indx(source='theory',draw=1)
-    mo.EM()
+    mo = mop.multiopti(0.1, 3, 200) #1 eV to 3 eV only for plotting and extrapolating r.i. values. it has no influence on the ARR
+    mo.ref_indx(source='theory',draw=0)
+    mo.EM(wl = 1050,wg = 2400, w_step = 1, angle_max = 10, angle_step = 1)
 
     # Get values from the input fields
     Bragg = float(Bragg_var.get())
@@ -31,10 +31,15 @@ def plot_result():
     exc_thick = float(exc_thick_var.get())
 
     # Call the DBR, calc, and plot_reslt methods
-    mo.DBR(Bragg, mode, air_n, DBR_per_up, DBR_per_bot,
+    # brg_cav_thick is cavity designed for Braggs wavelength w/o exciton.
+    # act_cav_thick is actual cavity length with exciton layers.
+    # When no excitons both of these shoudl be same.
+    a,b = mo.DBR(Bragg, mode, air_n, DBR_per_up, DBR_per_bot,
            lr1_n, lr2_n, cav_n, lr4_n, lr5_n, sub_n,
            exc_num, exc_thick)
-
+    
+    print (a,b)
+    
     mo.calc()
 
     fig = plt.figure(figsize=(12, 6))
@@ -110,16 +115,16 @@ plot_button = ttk.Button(left_pane, text="Plot", command=plot_result)
 plot_button.grid(row=len(inputs), columnspan=2, pady=10)
 
 # Set the initial values for the input fields
-Bragg_var.set("555")
-mode_var.set("10")
+Bragg_var.set("1550")
+mode_var.set("1")
 air_n_var.set("1")
-DBR_per_up_var.set("4")
-DBR_per_bot_var.set("4")
-lr1_n_var.set("1.5")
-lr2_n_var.set("2")
+DBR_per_up_var.set("3")
+DBR_per_bot_var.set("3")
+lr1_n_var.set("1.4")
+lr2_n_var.set("2.2")
 cav_n_var.set("1.5")
-lr4_n_var.set("2")
-lr5_n_var.set("1.5")
+lr4_n_var.set("2.2")
+lr5_n_var.set("1.4")
 sub_n_var.set("1.5")
 exc_num_var.set("0")
 exc_thick_var.set("0")
