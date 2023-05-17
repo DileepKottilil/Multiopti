@@ -188,7 +188,7 @@ class multiopti:
     def expt(self,):
 
         return
-        
+    #EM is only for plotting refrective index for waveengths wl to wg
     def EM(self,wl = 415, wg = 750, w_step = 1, pol = 1,angl = np.array([0,45]),
             angle_max = 80,angle_step = 1,draw = 0):
             

@@ -47,6 +47,8 @@ def plot_result():
     fig, ax2 = mo.plot_0Deg(ax2)
     fig, ax3 = mo.DBRplot(ax3)
 
+    #self.fig = fig
+
     #fig.tight_layout()  
 
    
@@ -63,13 +65,21 @@ def plot_result():
     canvas.get_tk_widget().grid(row=0, column=0)
 
 
+def save_button():
+    mo = mop.multiopti(1, 3, 200)
+    mo.save_text()
+    mo.save_plot_reslt()
+    mo.save_DBRplot()
+    mo.save_reflectivity_matrix()
 
-    
 
-
-# Create the main window
+# Create the main window. It should be first.
 root = tk.Tk()
 root.title("Multiopti GUI")
+
+#save button
+save_button = tk.Button(root, text="Save Results", command=save_button)
+save_button.grid(row=18, column=1, pady=10)
 
 # Create the left and right panes
 left_pane = ttk.Frame(root)
@@ -106,7 +116,7 @@ for i, (label_text, var) in enumerate(inputs):
     entry.grid(row=i, column=1, padx=10, pady=5, sticky="w")
 
 # Create the "Plot" button in the left pane
-plot_button = ttk.Button(left_pane, text="Plot", command=plot_result)
+plot_button = ttk.Button(left_pane, text="Plot", command=plot_result())
 plot_button.grid(row=len(inputs), columnspan=2, pady=10)
 
 # Set the initial values for the input fields

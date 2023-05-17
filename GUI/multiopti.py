@@ -50,20 +50,14 @@ class multiopti:
       self.rmin = min(lst)
       self.rmax = max(lst)
 
-      #fig, ax = plt.subplots()
-      #plt.axes
-
-      #ax.axes
-
-      # self.thick_layer1
+     
       ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
       for i in range(self.DBR_per_up):
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
 
-        #plt.gca().add_patch(rectangle1)
-        #plt.gca().add_patch(rectangle2)
+      
 
         ax.add_patch(rectangle1)
         ax.add_patch(rectangle2)
@@ -135,13 +129,7 @@ class multiopti:
 
       return fig, ax
     
-      """plt.tight_layout
-      plt.autoscale()
-      
-      plt.xlim(0,70)
-      
-
-      plt.show()"""
+     
 
 
 
@@ -416,3 +404,16 @@ class multiopti:
       arr = np.transpose(np.vstack((self.wavelength,Deg0)))
 
       np.savetxt("Deg0.txt", arr)
+
+    def save_plot_reslt(self, file_name="plot_reslt.png"):
+        fig, ax = self.plot_reslt()
+        fig.savefig(file_name)
+        plt.close(fig)
+
+    def save_DBRplot(self, file_name="DBRplot.png"):
+        fig, ax = self.DBRplot()
+        fig.savefig(file_name)
+        plt.close(fig)
+
+    def save_reflectivity_matrix(self, file_name="reflectivity_matrix.txt"):
+        np.savetxt(file_name, self.Reflectivity)
