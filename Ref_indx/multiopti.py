@@ -39,7 +39,7 @@ class multiopti:
       r = int(r)
       return "#{:02x}{:02x}{:02x}".format(r,g,b)
 
-    def DBRplot(self,ax = None):
+    """ def DBRplot(self,ax = None):
       if ax is None:
             fig, ax = plt.subplots()
       else:
@@ -53,7 +53,7 @@ class multiopti:
     
       ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
-      for i in range(self.DBR_per_up):
+      for i in range(int(self.DBR_per_up)): #changed
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
 
@@ -66,6 +66,17 @@ class multiopti:
         ax.annotate(str(self.lr2_n), (55, -y1-self.thick_layer1-self.thick_layer2/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
         y1 = y1+self.thick_layer1+self.thick_layer2
+
+        if self.DBR_per_up - int(self.DBR_per_up) > 0:
+          
+           
+          rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
+
+          ax.add_patch(rectangle1)
+          
+          ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+          y1 = y1+self.thick_layer1
 
       if self.exc_num != 0 and self.exc_thick != 0:
 
@@ -106,7 +117,7 @@ class multiopti:
       y1 = y1+self.cav_layer_thick
 
       
-      for i in range(self.DBR_per_bot):
+      for i in range(int(self.DBR_per_bot)):
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc=self.c_map(self.lr5_n),ec="black")
 
@@ -120,15 +131,135 @@ class multiopti:
 
         y1 = y1+self.thick_layer4+self.thick_layer5
 
+        if self.DBR_per_bot - int(self.DBR_per_bot) > 0:
+        
+          
+          rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
+
+          ax.add_patch(rectangle1)
+          
+          ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
+                  fontsize=6, ha='center', va='center')
+          y1 = y1+self.thick_layer4
+
         # plt.axis('scaled')
       ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
       ax.autoscale()
       ax.set_xlim(0,70)
 
-      return fig, ax
+      return fig, ax """
     
-  
+    def DBRplot(self, ax = None):
+      if ax is None:
+          fig, ax = plt.subplots()
+      else:
+          fig = ax.figure
+
+      y1 = 0
+      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
+      self.rmin = min(lst)
+      self.rmax = max(lst)
+
+      ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
+                  fontsize=6, ha='center', va='center')
+      
+      top_full_pairs = int(self.DBR_per_up_for_schematic)
+      top_extra_layer = self.DBR_per_up_for_schematic - top_full_pairs
+
+      for i in range(top_full_pairs):
+          for layer_thickness, layer_ri in [(self.thick_layer1, self.lr1_n), (self.thick_layer2, self.lr2_n)]:
+              rectangle = plt.Rectangle((0,-y1), 50, -layer_thickness, fc=self.c_map(layer_ri),ec="black")
+              ax.add_patch(rectangle)
+              ax.annotate(str(layer_ri), (55, -y1-layer_thickness/2), color='b', weight='bold', 
+                          fontsize=6, ha='center', va='center')
+              y1 += layer_thickness
+
+      if top_extra_layer > 0:
+          rectangle = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
+          ax.add_patch(rectangle)
+          ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
+                      fontsize=6, ha='center', va='center')
+          y1 += self.thick_layer1
+
+      # Similar logic for cavity and exciton layers...
+      if self.exc_num != 0 and self.exc_thick != 0:
+
+        for i in range(math.floor(self.cav_layers/2)):
+          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
+          rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
+
+          ax.add_patch(rectangle1)
+          ax.add_patch(rectangle2)
+          
+          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                  fontsize=6, ha='center', va='center')
+          ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
+                  fontsize=6, ha='center', va='center')
+          y1 = y1+self.cav_layer_thick+self.exc_thick
+      
+      elif self.exc_num == 0 or self.exc_thick == 0:
+        for i in range(math.floor(self.cav_layers/2)):
+          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
+          # rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
+
+          ax.add_patch(rectangle1)
+          # plt.gca().add_patch(rectangle2)
+          
+          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                  fontsize=6, ha='center', va='center')
+          # ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
+                  # fontsize=6, ha='center', va='center')
+          y1 = y1+self.cav_layer_thick
+
+        
+      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
+      ax.add_patch(rectangle2)
+      
+      ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+      
+      y1 = y1+self.cav_layer_thick
+###########
+      
+      #delete -1 and bottom_extra_layer =  0.5 later
+      bottom_full_pairs = int(self.DBR_per_bot_for_schematic)-1
+      #bottom_extra_layer = self.DBR_per_bot_for_schematic - bottom_full_pairs
+      bottom_extra_layer = 0.5
+
+      for i in range(bottom_full_pairs):
+          for layer_thickness, layer_ri in [(self.thick_layer4, self.lr4_n), (self.thick_layer5, self.lr5_n)]:
+              rectangle = plt.Rectangle((0,-y1), 50, -layer_thickness, fc=self.c_map(layer_ri),ec="black")
+              ax.add_patch(rectangle)
+              ax.annotate(str(layer_ri), (55, -y1-layer_thickness/2), color='b', weight='bold', 
+                          fontsize=6, ha='center', va='center')
+              y1 += layer_thickness
+
+      if bottom_extra_layer > 0:
+          rectangle = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
+          ax.add_patch(rectangle)
+          ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
+                      fontsize=6, ha='center', va='center')
+          y1 += self.thick_layer4
+          
+    # The rest of your code remains unchanged...
+
+##########     
+
+      # Final layers and annotation...
+      #substrate plot
+      """ rectangle = plt.Rectangle((0,-y1), 50, -0.2E-6, fc=self.c_map(self.sub_n),ec="black")
+      ax.add_patch(rectangle) """
+      ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
+                 fontsize=6, ha='center', va='center')
+      
+      ax.autoscale()
+      ax.set_xlim(0,70)
+      #ax.set_ylim(-4E-6,0)
+
+      return fig, ax
+      
+
 
     def Reverse(self,lst):
       new_lst = lst[::-1]
@@ -239,8 +370,13 @@ class multiopti:
         self.mode = mode
         
         self.air_n = air_n
-        self.DBR_per_up = DBR_per_up
-        self.DBR_per_bot = DBR_per_bot
+        self.DBR_per_up = int(DBR_per_up)
+        self.DBR_per_bot = int(DBR_per_bot)
+
+        #below two are only used to plot the DBR schamtic. Not for any calulations.
+        self.DBR_per_up_for_schematic = DBR_per_up
+        self.DBR_per_bot_for_schematic = DBR_per_bot
+
         self.lr1_n = lr1_n
         self.lr2_n = lr2_n
         self.cav_n = cav_n

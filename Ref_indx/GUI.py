@@ -21,8 +21,10 @@ def plot_result():
     Bragg = float(Bragg_var.get())
     mode = int(mode_var.get())
     air_n = float(air_n_var.get())
-    DBR_per_up = int(DBR_per_up_var.get())
-    DBR_per_bot = int(DBR_per_bot_var.get())
+
+    DBR_per_up = float(DBR_per_up_var.get())
+    DBR_per_bot = float(DBR_per_bot_var.get())
+    
     lr1_n = float(lr1_n_var.get())
     lr2_n = float(lr2_n_var.get())
     cav_n = float(cav_n_var.get())
@@ -40,7 +42,6 @@ def plot_result():
            lr1_n, lr2_n, cav_n, lr4_n, lr5_n, sub_n,
            exc_num, exc_thick)
     
-    #print (a,b, lr4, lr5)
     
     mo.calc()
 
