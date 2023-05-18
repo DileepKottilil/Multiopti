@@ -50,20 +50,13 @@ class multiopti:
       self.rmin = min(lst)
       self.rmax = max(lst)
 
-      #fig, ax = plt.subplots()
-      #plt.axes
-
-      #ax.axes
-
-      # self.thick_layer1
+    
       ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
       for i in range(self.DBR_per_up):
         rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
         rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
 
-        #plt.gca().add_patch(rectangle1)
-        #plt.gca().add_patch(rectangle2)
 
         ax.add_patch(rectangle1)
         ax.add_patch(rectangle2)
@@ -135,15 +128,7 @@ class multiopti:
 
       return fig, ax
     
-      """plt.tight_layout
-      plt.autoscale()
-      
-      plt.xlim(0,70)
-      
-
-      plt.show()"""
-
-
+  
 
     def Reverse(self,lst):
       new_lst = lst[::-1]
@@ -218,8 +203,8 @@ class multiopti:
 
         return
         
-    def EM(self,wl = 415, wg = 750, w_step = 1, pol = 1,angl = np.array([0,45]),
-            angle_max = 80,angle_step = 1,draw = 0):
+    def EM(self,wl = 300, wg = 750, w_step = 1, pol = 1,angl = np.array([0,45]),
+            angle_max = 60,angle_step = 1,draw = 0):
             
         self.wavelength = (np.linspace(wl,wg,int(((wg-wl)/w_step)+1)))*1E-9 # in m
         self.ref_n1 = interp1d(self.Reverse(self.file1_wav), self.Reverse(self.n1),kind='cubic')(self.wavelength)
