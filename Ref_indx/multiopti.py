@@ -540,7 +540,7 @@ class multiopti:
       
     
     
-    def plot_0Deg(self, ax = None):
+    def plot_0Deg(self, ax = None, given_inputs = [0]):
       
       if ax is None:
             fig, ax = plt.subplots()
@@ -549,10 +549,18 @@ class multiopti:
       
       
       
-      aa, bb = self.Reflectivity.shape
-      self.Deg0 = self.Reflectivity[:,bb//2]
-      ax.plot(self.wavelength*1E6,self.Deg0)
+      #aa, bb = self.Reflectivity.shape
+      for given_input in given_inputs:
+        index = np.abs(self.angle_set*180/np.pi - given_input).argmin()
+        #closest_actual_value = self.angle_set[index]
       
+
+        self.Deg0 = self.Reflectivity[:,index]
+
+        ax.plot(self.wavelength*1E6,self.Deg0, label=f'Angle: {self.angle_set[index]*180/np.pi}')
+
+      #ax.plot(self.wavelength*1E6,self.Deg0)
+      ax.legend(loc = "upper right")
       #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Wavelength (um)')
       ax.set_ylabel('Reflectivity (a.u.)')
