@@ -39,116 +39,7 @@ class multiopti:
       r = int(r)
       return "#{:02x}{:02x}{:02x}".format(r,g,b)
 
-    """ def DBRplot(self,ax = None):
-      if ax is None:
-            fig, ax = plt.subplots()
-      else:
-            fig = ax.figure
-
-      y1 = 0
-      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
-      self.rmin = min(lst)
-      self.rmax = max(lst)
-
-    
-      ax.annotate(str(self.air_n), (25, self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-      for i in range(int(self.DBR_per_up)): #changed
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
-        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer1), 50, -self.thick_layer2, fc=self.c_map(self.lr2_n),ec="black")
-
-
-        ax.add_patch(rectangle1)
-        ax.add_patch(rectangle2)
-
-        ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        ax.annotate(str(self.lr2_n), (55, -y1-self.thick_layer1-self.thick_layer2/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        y1 = y1+self.thick_layer1+self.thick_layer2
-
-        if self.DBR_per_up - int(self.DBR_per_up) > 0:
-          
-           
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer1, fc=self.c_map(self.lr1_n),ec="black")
-
-          ax.add_patch(rectangle1)
-          
-          ax.annotate(str(self.lr1_n), (55, -y1-self.thick_layer1/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-          y1 = y1+self.thick_layer1
-
-      if self.exc_num != 0 and self.exc_thick != 0:
-
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec="black")
-          rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
-
-          ax.add_patch(rectangle1)
-          ax.add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick+self.exc_thick
-      
-      elif self.exc_num == 0 or self.exc_thick == 0:
-        for i in range(math.floor(self.cav_layers/2)):
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-          # rectangle2 = plt.Rectangle((0,-y1-self.cav_layer_thick), 50, -self.exc_thick, fc='green',ec="black")
-
-          ax.add_patch(rectangle1)
-          # plt.gca().add_patch(rectangle2)
-          
-          ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          # ax.annotate("Matter", (55, -y1-self.cav_layer_thick-self.exc_thick/2), color='b', weight='bold', 
-                  # fontsize=6, ha='center', va='center')
-          y1 = y1+self.cav_layer_thick
-
-        
-      rectangle2 = plt.Rectangle((0,-y1), 50, -self.cav_layer_thick, fc=self.c_map(self.cav_n),ec=self.c_map(self.cav_n))
-      ax.add_patch(rectangle2)
-      
-      ax.annotate(str(self.cav_n), (55, -y1-self.cav_layer_thick/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-      
-      y1 = y1+self.cav_layer_thick
-
-      
-      for i in range(int(self.DBR_per_bot)):
-        rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
-        rectangle2 = plt.Rectangle((0,-y1-self.thick_layer4), 50, -self.thick_layer5, fc=self.c_map(self.lr5_n),ec="black")
-
-        ax.add_patch(rectangle1)
-        ax.add_patch(rectangle2)
-
-        ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-        ax.annotate(str(self.lr5_n), (55, -y1-self.thick_layer4-self.thick_layer5/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-
-        y1 = y1+self.thick_layer4+self.thick_layer5
-
-        if self.DBR_per_bot - int(self.DBR_per_bot) > 0:
-        
-          
-          rectangle1 = plt.Rectangle((0,-y1), 50, -self.thick_layer4, fc=self.c_map(self.lr4_n),ec="black")
-
-          ax.add_patch(rectangle1)
-          
-          ax.annotate(str(self.lr4_n), (55, -y1-self.thick_layer4/2), color='b', weight='bold', 
-                  fontsize=6, ha='center', va='center')
-          y1 = y1+self.thick_layer4
-
-        # plt.axis('scaled')
-      ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
-                 fontsize=6, ha='center', va='center')
-      ax.autoscale()
-      ax.set_xlim(0,70)
-
-      return fig, ax """
+   
     
     def DBRplot(self, ax = None):
       if ax is None:
@@ -365,10 +256,13 @@ class multiopti:
     
     def DBR(self,Bragg = 555, mode = 10, air_n = 1, DBR_per_up = 2,DBR_per_bot = 2,
               lr1_n = 1.5, lr2_n = 2.5, cav_n = 1.5, lr4_n = 2.5, lr5_n = 1.5, sub_n = 1.5,
-              exc_num = 1, exc_thick = 1):
+              exc_num = 1, exc_thick = 1, sub_slab_thick = 0, sub_slab_n = 1.5):
         self.Bragg = Bragg*1E-9
         self.mode = mode
-        
+
+        self.sub_slab_thick = sub_slab_thick*1E-3 #mm to m is done ##CHANGE
+        self.sub_slab_n = sub_slab_n #mm to m is done ##CHANGE
+
         self.air_n = air_n
         self.DBR_per_up = int(DBR_per_up)
         self.DBR_per_bot = int(DBR_per_bot)
@@ -389,6 +283,7 @@ class multiopti:
         self.cav_layers = 2*self.exc_num+1
         self.air_n_real_mat = self.air_n*np.ones((1,len(self.wavelength)))
 
+        self.sub_slab_n_mat = self.sub_slab_n*np.ones((1,len(self.wavelength))) ###CHANGE
         self.sub_mat = self.sub_n*np.ones((1,len(self.wavelength)))
         self.cav_indices = np.vstack((self.cav_n*np.ones((1,len(self.wavelength))), self.layr3_n_cmplx))
         
@@ -400,11 +295,11 @@ class multiopti:
           self.indx_mat = np.vstack((self.air_n_real_mat,self.up_DBR_indx,
                     np.vstack((self.cav_indices,)*self.exc_num),
                     self.cav_n*np.ones((1,len(self.wavelength))),
-                    self.lw_DBR_indx,self.sub_mat)) #shape is (11,301) for default values
+                    self.lw_DBR_indx,self.sub_slab_n_mat,self.sub_mat)) #shape is (11,301) for default values
         else:
           self.indx_mat = np.vstack((self.air_n_real_mat,self.up_DBR_indx,
                     self.cav_n*np.ones((1,len(self.wavelength))),
-                    self.lw_DBR_indx,self.sub_mat))
+                    self.lw_DBR_indx,self.sub_slab_n_mat,self.sub_mat))
 
         self.thick_layer1 = self.Bragg/(4*self.lr1_n) # in m
         self.thick_layer2 = self.Bragg/(4*self.lr2_n) # in m
@@ -428,11 +323,12 @@ class multiopti:
 
           self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
                   np.vstack((self.cav_thick_mat,)*self.exc_num),
-                  self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
+                  self.cav_layer_thick,self.thick_layer4,self.thick_layer5,self.sub_slab_thick))
         else:
           self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
-                  self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
+                  self.cav_layer_thick,self.thick_layer4,self.thick_layer5,self.sub_slab_thick))
         return self.tot_cav_thick, (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick, self.thick_layer1,self.thick_layer2,self.thick_layer4,self.thick_layer5 
+    
     def calc(self):
 
 
@@ -444,20 +340,24 @@ class multiopti:
         
 
         for angle in tqdm(self.angle_set):
+
+          #calcs the angle of incidence and refraction angle for every inclident angle, "angle"
           self.refr_theta_mat = np.empty((0,len(self.wavelength))) #create empty array with fixed number of coulums as row matrices are added later
           self.refr_theta_mat = np.append(self.refr_theta_mat,angle*np.ones((1,len(self.wavelength))),axis = 0)
-          for i in np.arange(1,6+self.cav_layers):
+          #calc angle matrices
+          for i in np.arange(1,7+self.cav_layers):
             self.refr_theta_mat = np.append(self.refr_theta_mat,np.arcsin((self.indx_mat[[i-1]]*np.sin(self.refr_theta_mat[[i-1]])/self.indx_mat[[i]])),
                                   axis = 0)
             
           self.ad_mat = np.empty((0,len(self.wavelength))) # zeros(length(thick_mat)+2,length(Wavelength));
-          for i in np.arange(0,6+self.cav_layers):
+          
+          for i in np.arange(0,7+self.cav_layers):
             self.ad_mat = np.append(self.ad_mat,self.indx_mat[[i]]*np.cos(self.refr_theta_mat[[i]])*self.ad_freespace,
                                   axis = 0)
         
           
           self.phase_mat = np.empty((0,len(self.wavelength)))
-          for i in np.arange(1,5+self.cav_layers): #phase only calculated without air and substrate
+          for i in np.arange(1,6+self.cav_layers): #phase only calculated without air and substrate
                 
             self.phase_mat = np.append(self.phase_mat,2*np.pi*self.indx_mat[[i]]*self.thick_mat[[i-1]]*np.cos(self.refr_theta_mat[[i]])/self.wavelength,
                                   axis = 0)
@@ -469,10 +369,12 @@ class multiopti:
             self.M = np.asmatrix([[1,0],[0,1]])
             
             for k in np.array([0,1]):
+              #it calcs M for a pair of DBR
               self.b = np.asmatrix([np.cos(self.phase_mat[[[k],[i]]]),(np.sin(self.phase_mat[[[k],[i]]])/self.ad_mat[[[k+1],[i]]])*1j]).reshape(1,2)
               self.c = np.asmatrix([(self.ad_mat[[[k+1],[i]]])*np.sin(self.phase_mat[[[k],[i]]])*1j,np.cos(self.phase_mat[[[k],[i]]])]).reshape(1,2)
               self.M = self.M*np.concatenate((self.b,self.c))
 
+              #it cals for many layers of DBRs
               if k == 1:
                 self.M = self.M**self.DBR_per_up
                 # print("d")
@@ -493,6 +395,8 @@ class multiopti:
                 self.M = self.M*self.M1**self.DBR_per_bot
 
             
+            
+
 
             self.c = self.M[[[1],[0]]] + self.M[[[1],[1]]]*self.ad_mat[[[self.ad_m_sze[0]-1],[i]]]; #substrate effect comes
             self.b = self.M[[[0],[0]]] + self.M[[[0],[1]]]*self.ad_mat[[[self.ad_m_sze[0]-1],[i]]]; #substrate effect comes
