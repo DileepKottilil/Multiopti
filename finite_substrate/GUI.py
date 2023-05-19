@@ -31,6 +31,7 @@ def plot_result():
     lr4_n = float(lr4_n_var.get())
     lr5_n = float(lr5_n_var.get())
     sub_n = float(sub_n_var.get())
+    sub_slab = float(sub_slab_var.get()) # in mm
     exc_num = int(exc_num_var.get())
     exc_thick = float(exc_thick_var.get())
 
@@ -40,7 +41,7 @@ def plot_result():
     # When no excitons both of these shoudl be same.
     a, b, lr1, lr2, lr4, lr5 = mo.DBR(Bragg, mode, air_n, DBR_per_up, DBR_per_bot,
            lr1_n, lr2_n, cav_n, lr4_n, lr5_n, sub_n,
-           exc_num, exc_thick)
+           exc_num, exc_thick, sub_slab)
     
     
     mo.calc()
@@ -97,14 +98,15 @@ cav_n_var = tk.StringVar()
 lr4_n_var = tk.StringVar()
 lr5_n_var = tk.StringVar()
 sub_n_var = tk.StringVar()
+sub_slab_var = tk.StringVar() #added new
 exc_num_var = tk.StringVar()
 exc_thick_var = tk.StringVar()
 
-inputs = [("Bragg", Bragg_var), ("mode", mode_var), ("air_n", air_n_var),
+inputs = [("Bragg (nm)", Bragg_var), ("mode", mode_var), ("air_n", air_n_var),
           ("DBR_per_up", DBR_per_up_var), ("DBR_per_bot", DBR_per_bot_var),
           ("lr1_n", lr1_n_var), ("lr2_n", lr2_n_var), ("cav_n", cav_n_var),
           ("lr4_n", lr4_n_var), ("lr5_n", lr5_n_var), ("sub_n", sub_n_var),
-          ("exc_num", exc_num_var), ("exc_thick", exc_thick_var)]
+          ("exc_num", exc_num_var), ("exc_thick (nm)", exc_thick_var),("sub_slab (mm)", sub_slab_var)]
 
 for i, (label_text, var) in enumerate(inputs):
     #label = ttk.Label(left_p
@@ -122,13 +124,14 @@ Bragg_var.set("1550")
 mode_var.set("1")
 air_n_var.set("1")
 DBR_per_up_var.set("0")
-DBR_per_bot_var.set("3")
+DBR_per_bot_var.set("4")
 lr1_n_var.set("1.4")
 lr2_n_var.set("2.2")
 cav_n_var.set("1")
 lr4_n_var.set("2.34")
 lr5_n_var.set("1.48")
 sub_n_var.set("1.5")
+sub_slab_var.set("1")
 exc_num_var.set("0")
 exc_thick_var.set("0")
 
