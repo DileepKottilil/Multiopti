@@ -292,7 +292,7 @@ class multiopti:
       elif self.source == 'experiment':
         # self.file
       
-        self.file.close
+        #self.file.close
         
         return
 
