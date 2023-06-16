@@ -15,7 +15,7 @@ def plot_result():
     mo.ref_indx(source='theory',draw=0)
 
     #When there is an interpolation problem, set the multiopti energy values accordingly
-    mo.EM(wl = 390,wg = 700, w_step = 2, angle_max = 50, angle_step = 2)
+    mo.EM(wl = 390,wg = 700, w_step = 1, angle_max = 50, angle_step = 1)
 
     # Get values from the input fields
     Bragg = float(Bragg_var.get())
@@ -124,7 +124,7 @@ plot_button.grid(row=len(inputs), columnspan=2, pady=10)
 Bragg_var.set("1550")
 mode_var.set("1") #This fixes the Braggs mode as the 1st cavity mode
 air_n_var.set("1")
-DBR_per_up_var.set("0")
+DBR_per_up_var.set("4")
 DBR_per_bot_var.set("4")
 lr1_n_var.set("1.4")
 lr2_n_var.set("2.2")
@@ -132,8 +132,8 @@ cav_n_var.set("1")
 lr4_n_var.set("2.34")
 lr5_n_var.set("1.48")
 sub_n_var.set("1.5")
-exc_num_var.set("0")
-exc_thick_var.set("0")
+exc_num_var.set("1")
+exc_thick_var.set("1")
 
 # Run the main loop
 root.mainloop()
