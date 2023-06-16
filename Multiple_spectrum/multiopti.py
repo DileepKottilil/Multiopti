@@ -271,7 +271,7 @@ class multiopti:
       print(filepath)
       return
     
-    def ref_indx(self,source = 'theory', e0 = 3,f = 10,gam = 0.02,exc = 2.238,draw = 0):
+    def ref_indx(self,source = 'theory', fileName = None,e0 = 3,f = 10,gam = 0.02,exc = 2.238,draw = 0):
       self.source = source
       if self.source =='theory':
 
@@ -288,10 +288,28 @@ class multiopti:
         self.k1 = np.imag(self.refidx)
         
         self.file1_wav = 1240E-9/(self.omega) #in m
+        
+        
+        arr = np.transpose(np.vstack((self.file1_wav,self.n1, self.k1)))
+
+        np.savetxt("ref_indx.txt", arr)
 
       elif self.source == 'experiment':
-        # self.file
-      
+        
+        self.fileName = fileName
+        data = np.loadtxt(self.fileName,skiprows=1)
+        # Assign columns to variables
+        self.file1_wav = data[:, 0]*1E-6 #assuming the experiemtn wavelength is in um
+        self.n1 = data[:, 1]
+        self.k1 = data[:, 2]
+        print("Done Baby")
+        # self.eps = self.e0+(self.f/((self.exc**2-self.omega**2)-1j*self.gam*self.omega))
+        
+        # self.refidx = np.sqrt(self.eps)
+        # self.n1 = np.real(self.refidx)
+        # self.k1 = np.imag(self.refidx)
+        
+        #self.file1_wav = 1240E-9/(self.omega) #in m
         #self.file.close
         
         return
@@ -523,10 +541,10 @@ class multiopti:
       # ax.set_ylabel('Photon Energy (eV)')
 
       #for plottingin wavelenth. extend is setting x y limits for axes
-      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,self.wavelength[0],self.wavelength[len(self.wavelength)-1]]
+      extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,self.wavelength[len(self.wavelength)-1],self.wavelength[0]]
       img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
       ax.set_xlabel('Angle(degree)')
-      ax.set_ylabel('Wavelength (nm)')
+      ax.set_ylabel('Wavelength (um)')
 
       #colorbar axis
       cbar_ax = fig.add_axes([0.025, 0.025, 0.025, 0.25])  # <-- added this line

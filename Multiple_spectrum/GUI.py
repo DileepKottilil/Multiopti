@@ -11,11 +11,12 @@ import matplotlib.gridspec as gridspec
 # Function to execute when the "Plot" button is clicked
 def plot_result():
     # Create an instance of the multiopti class by Dileep
-    mo = mop.multiopti(0.1, 4, 600) #1 eV to 3 eV only for plotting and extrapolating r.i. values. it has no influence on the ARR
-    mo.ref_indx(source='theory',draw=0)
+    mo = mop.multiopti(1, 4, 600) #1 eV to 3 eV only for plotting and extrapolating r.i. values. it has no influence on the ARR
+    mo.ref_indx(source='experiment',fileName = "mos3.txt",draw=0)
+    #mo.ref_indx(source='theory',draw=0)
 
     #When there is an interpolation problem, set the multiopti energy values accordingly
-    mo.EM(wl = 390,wg = 700, w_step = 1, angle_max = 50, angle_step = 1)
+    mo.EM(wl = 400,wg = 800, w_step = 1, angle_max = 50, angle_step = 1)
 
     # Get values from the input fields
     Bragg = float(Bragg_var.get())

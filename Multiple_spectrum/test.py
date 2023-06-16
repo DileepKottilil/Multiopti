@@ -1,18 +1,28 @@
-import multiopti as mop
+import matplotlib.pyplot as plt
 
-mo = mop.multiopti(1,3,200) #create an instance of class multiopt
-mo.ref_indx(source = 'theory')
+import numpy as np
 
-# P pol
+# Load the data
+data = np.loadtxt('ref_indx.txt', skiprows = 1)
 
-#_____________
-mo.EM()
-mo.DBR(Bragg = 550, mode = 10, air_n = 1, DBR_per_up = 0,DBR_per_bot = 0,
-              lr1_n = 1, lr2_n = 1, cav_n = 1.5, lr4_n = 1, lr5_n = 1, sub_n = 1.5,
-              exc_num = 0, exc_thick = 0)
-#mo.DBRplot()
-mo.calc()
-mo.plot_reslt()
+# Assign columns to variables
+x = data[:, 0]
+y1 = data[:, 1]
+y2 = data[:, 2]
 
-mo.plot_0Deg()
+# Now you can use x, y1, and y2
 
+# Create the plot
+plt.figure(figsize=(10,6))
+
+# Plot y1 vs x
+plt.plot(x, y1, label='Column 2')
+
+# Plot y2 vs x
+plt.plot(x, y2, label='Column 3')
+
+# Add a legend
+plt.legend()
+
+# Show the plot
+plt.show()
