@@ -292,7 +292,7 @@ class multiopti:
         
         arr = np.transpose(np.vstack((self.file1_wav,self.n1, self.k1)))
 
-        np.savetxt("ref_indx.txt", arr)
+        #np.savetxt("ref_indx.txt", arr)
 
       elif self.source == 'experiment':
         
@@ -462,7 +462,7 @@ class multiopti:
         
 
         for angle in tqdm(self.angle_set):
-          self.refr_theta_mat = np.empty((0,len(self.wavelength))) #create empty array with fixed number of coulums as row matrices are added later
+          self.refr_theta_mat = np.empty((0,len(self.wavelength))) #create empty array with fixed number of coulums and row matrices are added later
           self.refr_theta_mat = np.append(self.refr_theta_mat,angle*np.ones((1,len(self.wavelength))),axis = 0)
           for i in np.arange(1,6+self.cav_layers):
             self.refr_theta_mat = np.append(self.refr_theta_mat,np.arcsin((self.indx_mat[[i-1]]*np.sin(self.refr_theta_mat[[i-1]])/self.indx_mat[[i]])),
