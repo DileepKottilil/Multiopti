@@ -133,8 +133,8 @@ cav_n_var.set("1")
 lr4_n_var.set("2.34")
 lr5_n_var.set("1.48")
 sub_n_var.set("1.5")
-exc_num_var.set("1")
-exc_thick_var.set("1")
+exc_num_var.set("0")
+exc_thick_var.set("0")
 
 # Run the main loop
 root.mainloop()

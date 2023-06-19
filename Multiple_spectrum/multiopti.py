@@ -485,7 +485,9 @@ class multiopti:
 
           for i in np.arange(0,len(self.wavelength)):
             self.M = np.asmatrix([[1,0],[0,1]])
-            
+
+            #k corresponds to number of layers
+            #below is for upper DBR calc
             for k in np.array([0,1]):
               self.b = np.asmatrix([np.cos(self.phase_mat[[[k],[i]]]),(np.sin(self.phase_mat[[[k],[i]]])/self.ad_mat[[[k+1],[i]]])*1j]).reshape(1,2)
               self.c = np.asmatrix([(self.ad_mat[[[k+1],[i]]])*np.sin(self.phase_mat[[[k],[i]]])*1j,np.cos(self.phase_mat[[[k],[i]]])]).reshape(1,2)
@@ -494,7 +496,8 @@ class multiopti:
               if k == 1:
                 self.M = self.M**self.DBR_per_up
                 # print("d")
-            for k in np.arange(2,self.ph_m_sze[0]-2):
+            #below is for cav and exciton calc
+            for k in np.arange(2,self.ph_m_sze[0]-2): # here k = 2 for cavity starting layer.
               self.b = np.asmatrix([np.cos(self.phase_mat[[[k],[i]]]),(np.sin(self.phase_mat[[[k],[i]]])/self.ad_mat[[[k+1],[i]]])*1j]).reshape(1,2)
               self.c = np.asmatrix([(self.ad_mat[[[k+1],[i]]])*np.sin(self.phase_mat[[[k],[i]]])*1j,np.cos(self.phase_mat[[[k],[i]]])]).reshape(1,2)
               self.M = self.M*np.concatenate((self.b,self.c))
@@ -502,6 +505,7 @@ class multiopti:
 
             self.M1 = np.asmatrix([[1,0],[0,1]])
             
+            #below is for bottom DBR calc
             for k in np.arange(self.ph_m_sze[0]-2,self.ph_m_sze[0]):
               self.b = np.asmatrix([np.cos(self.phase_mat[[[k],[i]]]),(np.sin(self.phase_mat[[[k],[i]]])/self.ad_mat[[[k+1],[i]]])*1j]).reshape(1,2)
               self.c = np.asmatrix([(self.ad_mat[[[k+1],[i]]])*np.sin(self.phase_mat[[[k],[i]]])*1j,np.cos(self.phase_mat[[[k],[i]]])]).reshape(1,2)
@@ -510,7 +514,7 @@ class multiopti:
               if k == self.ph_m_sze[0]-1:
                 self.M = self.M*self.M1**self.DBR_per_bot
 
-            
+            #code for finite substrate
 
             self.c = self.M[[[1],[0]]] + self.M[[[1],[1]]]*self.ad_mat[[[self.ad_m_sze[0]-1],[i]]]; #substrate effect comes
             self.b = self.M[[[0],[0]]] + self.M[[[0],[1]]]*self.ad_mat[[[self.ad_m_sze[0]-1],[i]]]; #substrate effect comes
