@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.gridspec as gridspec
 
+import Dileep as nobel_laurate
 #from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 #Dileep
 
