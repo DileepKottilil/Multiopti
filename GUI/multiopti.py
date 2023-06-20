@@ -233,9 +233,9 @@ class multiopti:
 ###########
       
       #delete -1 and bottom_extra_layer =  0.5 later
-      bottom_full_pairs = int(self.DBR_per_bot_for_schematic)-1
-      #bottom_extra_layer = self.DBR_per_bot_for_schematic - bottom_full_pairs
-      bottom_extra_layer = -0.5
+      bottom_full_pairs = int(self.DBR_per_bot_for_schematic)
+      bottom_extra_layer = self.DBR_per_bot_for_schematic - bottom_full_pairs
+      # bottom_extra_layer = -0.5
 
       for i in range(bottom_full_pairs):
           for layer_thickness, layer_ri in [(self.thick_layer4, self.lr4_n), (self.thick_layer5, self.lr5_n)]:
@@ -477,7 +477,14 @@ class multiopti:
         self.Reflectivity = np.empty((len(self.wavelength),len(self.angle_set)))
         self.Angle = []
         
+        top_full_pairs = int(self.DBR_per_up_for_schematic)
+        top_extra_layer = self.DBR_per_up_for_schematic - top_full_pairs
         
+        bottom_full_pairs = int(self.DBR_per_bot_for_schematic)
+        bottom_extra_layer = self.DBR_per_bot_for_schematic - bottom_full_pairs
+
+        # bot_full_pairs = int(self.DBR_per_up_for_schematic)
+        # bot_extra_layer = self.DBR_per_up_for_schematic - top_full_pairs
 
         for angle in tqdm(self.angle_set):
           self.refr_theta_mat = np.empty((0,len(self.wavelength))) #create empty array with fixed number of coulums and row matrices are added later
@@ -506,13 +513,27 @@ class multiopti:
 
             #k corresponds to number of layers
             #below is for upper DBR calc
+            
+
             for k in np.array([0,1]):
               self.b = np.asmatrix([np.cos(self.phase_mat[[[k],[i]]]),(np.sin(self.phase_mat[[[k],[i]]])/self.ad_mat[[[k+1],[i]]])*1j]).reshape(1,2)
               self.c = np.asmatrix([(self.ad_mat[[[k+1],[i]]])*np.sin(self.phase_mat[[[k],[i]]])*1j,np.cos(self.phase_mat[[[k],[i]]])]).reshape(1,2)
+              
               self.M = self.M*np.concatenate((self.b,self.c))
 
               if k == 1:
-                self.M = self.M**self.DBR_per_up
+                self.M = self.M**top_full_pairs
+
+                if top_extra_layer > 0:
+                  #k will be k-1 because the l1 layer's b and c (for which k = 0) to be calculated
+                  self.b = np.asmatrix([np.cos(self.phase_mat[[[k-1],[i]]]),(np.sin(self.phase_mat[[[k-1],[i]]])/self.ad_mat[[[k],[i]]])*1j]).reshape(1,2)
+                  self.c = np.asmatrix([(self.ad_mat[[[k],[i]]])*np.sin(self.phase_mat[[[k-1],[i]]])*1j,np.cos(self.phase_mat[[[k-1],[i]]])]).reshape(1,2)
+                  
+                  self.M = self.M*np.concatenate((self.b,self.c))
+
+              
+
+              
                 # print("d")
             #below is for cav and exciton calc
             for k in np.arange(2,self.ph_m_sze[0]-2): # here k = 2 for cavity starting layer.
@@ -530,7 +551,15 @@ class multiopti:
               self.M1 = self.M1*np.concatenate((self.b,self.c))
 
               if k == self.ph_m_sze[0]-1:
-                self.M = self.M*self.M1**self.DBR_per_bot
+                self.M = self.M*self.M1**bottom_full_pairs
+
+                if bottom_extra_layer > 0:
+                  #k will be k-1 because the l4 layer's b and c to be calculated
+                  self.b = np.asmatrix([np.cos(self.phase_mat[[[k-1],[i]]]),(np.sin(self.phase_mat[[[k-1],[i]]])/self.ad_mat[[[k],[i]]])*1j]).reshape(1,2)
+                  self.c = np.asmatrix([(self.ad_mat[[[k],[i]]])*np.sin(self.phase_mat[[[k-1],[i]]])*1j,np.cos(self.phase_mat[[[k-1],[i]]])]).reshape(1,2)
+                  self.M = self.M*np.concatenate((self.b,self.c))
+                  
+
 
             #code for finite substrate
             self.finite_sub_indx = finite_sub_indx*np.ones((1,len(self.wavelength))) #same for all wavelengths and angle
@@ -542,6 +571,7 @@ class multiopti:
             self.b = np.asmatrix([np.cos(self.finite_sub_phase[0,i]),(np.sin(self.finite_sub_phase[0,i])/(self.finite_sub_admtnce[0,i]))*1j]).reshape(1,2)
             self.c = np.asmatrix([(self.finite_sub_admtnce[0,i])*np.sin(self.finite_sub_phase[0,i])*1j,np.cos(self.finite_sub_phase[0,i])]).reshape(1,2)
             self.M2 = np.concatenate((self.b,self.c))
+            ##Code for finite substrate ends here
 
             self.M = self.M*self.M2
 
