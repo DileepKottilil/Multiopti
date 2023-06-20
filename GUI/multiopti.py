@@ -6,6 +6,7 @@ Created on Tue Jun 15 18:40:21    2021
 @author: kottilil dileep and team
 """
 import math
+import time
 import sys
 import numpy as np
 # import pandas as pd
@@ -28,13 +29,15 @@ class multiopti:
       
       tmax = 230
       tmin = 15
-      deno = (self.rmax-self.rmin)*(tmax-tmin)+tmin
+      deno = (self.rmax-self.rmin)
+      
       if deno == 0:
 
 
         mm = (val-self.rmin)
       else:
-         mm = (val-self.rmin)/deno
+        mm = (val-self.rmin)/(self.rmax-self.rmin)*(tmax-tmin)+tmin
+
       r = round(math.sin(0.024 * mm + 0) * 127 + 128)
       g = round(math.sin(0.024 * mm + 2) * 127 + 128)
       b = round(math.sin(0.024 * mm + 4) * 127 + 128)
@@ -42,6 +45,8 @@ class multiopti:
 
     def rgb2hex(self,r,g,b):
       r = int(r)
+      g = int(g)
+      b = int(b)
       return "#{:02x}{:02x}{:02x}".format(r,g,b)
 
     """ def DBRplot(self,ax = None):
@@ -162,7 +167,7 @@ class multiopti:
           fig = ax.figure
 
       y1 = 0
-      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n]
+      lst = [self.air_n,self.lr1_n,self.lr2_n,self.lr4_n,self.lr5_n,self.cav_n,self.sub_n,self.finite_sub_indx[0][0]]
       self.rmin = min(lst)
       self.rmax = max(lst)
 
@@ -230,7 +235,7 @@ class multiopti:
       #delete -1 and bottom_extra_layer =  0.5 later
       bottom_full_pairs = int(self.DBR_per_bot_for_schematic)-1
       #bottom_extra_layer = self.DBR_per_bot_for_schematic - bottom_full_pairs
-      bottom_extra_layer = 0.5
+      bottom_extra_layer = -0.5
 
       for i in range(bottom_full_pairs):
           for layer_thickness, layer_ri in [(self.thick_layer4, self.lr4_n), (self.thick_layer5, self.lr5_n)]:
@@ -251,13 +256,20 @@ class multiopti:
 
 ##########     
 
+      # New conditional layer
+      if self.finite_sub_thick[0][0]!=0:
+          rectangle = plt.Rectangle((0,-y1), 50, -self.finite_sub_thick[0][0], fc=self.c_map(self.finite_sub_indx[0][0]),ec="black")
+          ax.add_patch(rectangle)
+          ax.annotate(str(self.finite_sub_indx[0][0]), (55, -y1-self.finite_sub_thick[0][0]/2), color='b', weight='bold', 
+                      fontsize=6, ha='center', va='center')
+          y1 += self.finite_sub_thick[0][0]
       # Final layers and annotation...
       #substrate plot
       """ rectangle = plt.Rectangle((0,-y1), 50, -0.2E-6, fc=self.c_map(self.sub_n),ec="black")
       ax.add_patch(rectangle) """
       ax.annotate(str(self.sub_n), (25, -y1-self.thick_layer5/2), color='b', weight='bold', 
                  fontsize=6, ha='center', va='center')
-      
+      time.sleep(0.1)
       ax.autoscale()
       ax.set_xlim(0,70)
       #ax.set_ylim(-4E-6,0)
@@ -456,6 +468,7 @@ class multiopti:
           self.thick_mat = np.vstack((self.thick_layer1,self.thick_layer2,
                   self.cav_layer_thick,self.thick_layer4,self.thick_layer5))
         return self.tot_cav_thick, (self.cav_thick_mat*self.exc_num)+self.cav_layer_thick, self.thick_layer1,self.thick_layer2,self.thick_layer4,self.thick_layer5 
+    
     def calc(self,finite_sub_indx = 1.5, finite_sub_thick = 0):
 
 
