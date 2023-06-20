@@ -119,7 +119,7 @@ exc_thick_var = tk.StringVar()
 inputs = [("Bragg", Bragg_var), ("mode", mode_var), ("air_n", air_n_var),
           ("DBR_per_up", DBR_per_up_var), ("DBR_per_bot", DBR_per_bot_var),
           ("lr1_n", lr1_n_var), ("lr2_n", lr2_n_var), ("cav_n", cav_n_var),
-          ("lr4_n", lr4_n_var), ("lr5_n", lr5_n_var), ("finite_sub_n", finite_sub_indx_var),("finite_sub_thick (xm)", finite_sub_thick_var),("angle_step",angle_step_var),("sub_n", sub_n_var),
+          ("lr4_n", lr4_n_var), ("lr5_n", lr5_n_var), ("finite_sub_n", finite_sub_indx_var),("finite_sub_thick (m)", finite_sub_thick_var),("angle_step",angle_step_var),("sub_n", sub_n_var),
           ("exc_num", exc_num_var), ("exc_thick", exc_thick_var)]
 
 for i, (label_text, var) in enumerate(inputs):
@@ -146,7 +146,7 @@ lr4_n_var.set("2.34")
 lr5_n_var.set("1.48")
 finite_sub_indx_var.set ("1")
 finite_sub_thick_var.set("1E-6")
-angle_step_var.set("0.1")
+angle_step_var.set("1")
 sub_n_var.set("1.5")
 exc_num_var.set("0")
 exc_thick_var.set("0")
