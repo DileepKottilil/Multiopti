@@ -89,7 +89,7 @@ def plot_result():
 
 # Create the main window
 root = tk.Tk()
-root.title("Multiopti GUI")
+root.title("Multiopti powered by Dileep")
 
 # Create the left and right panes
 left_pane = ttk.Frame(root)
