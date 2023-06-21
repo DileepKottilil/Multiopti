@@ -475,6 +475,7 @@ class multiopti:
         self.z = 0
         self.angle_set = (np.linspace(-1*self.angle_max,self.angle_max,int(((2*self.angle_max)/self.angle_step)+1)))*np.pi/180
         self.Reflectivity = np.empty((len(self.wavelength),len(self.angle_set)))
+        self.Transmittivity = np.empty((len(self.wavelength),len(self.angle_set)))
         self.Angle = []
         
         top_full_pairs = int(self.DBR_per_up_for_schematic)
@@ -582,7 +583,11 @@ class multiopti:
             self.numerator = self.ad_mat[[[0],[i]]]*self.b - self.c
             
             self.r = self.numerator/self.denominator
-           
+            self.t = 2/self.denominator #this is taking the deno from self.r and multiplyt with 2*sub-adm*air_admittance
+
+            self.Trans = self.ad_mat[[[0],[i]]]*self.ad_mat[[[self.ad_m_sze[0]-1],[i]]]*self.t*np.conj(self.t) #this is taking the deno from self.r and multiplyt with 2*sub-adm*air_admittance
+            self.Transmittivity[[[i],[self.z]]] = np.real(self.Trans)
+
             self.Reflect = self.r*np.conj(self.r)
             self.Reflectivity[[[i],[self.z]]] = np.real(self.Reflect)
           
@@ -605,7 +610,7 @@ class multiopti:
 
       #for plottingin wavelenth. extend is setting x y limits for axes
       extend = [self.angle_set[0]*180/np.pi,self.angle_set[len(self.angle_set)-1]*180/np.pi,self.wavelength[len(self.wavelength)-1],self.wavelength[0]]
-      img = ax.imshow(self.Reflectivity,extent = extend,aspect = 'auto')
+      img = ax.imshow(np.ones((len(self.wavelength),len(self.angle_set)))-self.Reflectivity-self.Transmittivity,extent = extend,aspect = 'auto')
       ax.set_xlabel('Angle(degree)')
       ax.set_ylabel('Wavelength (um)')
 
@@ -621,7 +626,7 @@ class multiopti:
       
     
     
-    def plot_0Deg(self, ax = None, given_inputs = [0]):
+    def plot_0Deg(self, ax = None, given_inputs = [0], ref_trans = "reflection"):
       
       if ax is None:
             fig, ax = plt.subplots()
@@ -635,16 +640,31 @@ class multiopti:
         index = np.abs(self.angle_set*180/np.pi - given_input).argmin()
         #closest_actual_value = self.angle_set[index]
       
+        if ref_trans == "reflection":
+        
+          self.Deg0 = self.Reflectivity[:,index]
 
-        self.Deg0 = self.Reflectivity[:,index]
+          ax.plot(self.wavelength*1E6,self.Deg0, label=f'Angle: {self.angle_set[index]*180/np.pi}')
+          
+          ax.set_ylabel('Reflectivity (a.u.)')
 
-        ax.plot(self.wavelength*1E6,self.Deg0, label=f'Angle: {self.angle_set[index]*180/np.pi}')
+        elif ref_trans == "transmission":
+          self.Deg0 = self.Transmittivity[:,index]
 
+          ax.plot(self.wavelength*1E6,self.Deg0, label=f'Angle: {self.angle_set[index]*180/np.pi}')
+          
+          ax.set_ylabel('Transmittivity (a.u.)')
+        elif ref_trans == "absorption":
+          self.Deg0 = np.ones((len(self.wavelength),len(self.angle_set))) - self.Reflectivity-self.Transmittivity
+          self.Deg0 = self.Deg0[:,index]
+          ax.plot(self.wavelength*1E6,self.Deg0, label=f'Angle: {self.angle_set[index]*180/np.pi}')
+          
+          ax.set_ylabel('Absorption (a.u.)')
+      
       #ax.plot(self.wavelength*1E6,self.Deg0)
       ax.legend(loc = "upper right")
       #ax.set_ylim(ymin=-0.1, ymax = 0.1)
       ax.set_xlabel('Wavelength (um)')
-      ax.set_ylabel('Reflectivity (a.u.)')
       return fig, ax
 
      

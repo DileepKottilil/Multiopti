@@ -13,7 +13,7 @@ def plot_result():
     # Create an instance of the multiopti class by Dileep
     mo = mop.multiopti(1, 4, 600) #1 eV to 3 eV only for plotting and extrapolating r.i. values. it has no influence on the ARR
     #mo.ref_indx(source='experiment',fileName = "mos3.txt",draw=0)
-    mo.ref_indx(source='theory',draw=1)
+    mo.ref_indx(source='theory',draw=0)
 
     #When there is an interpolation problem, set the multiopti energy values accordingly
     
@@ -61,7 +61,7 @@ def plot_result():
     ax3 = fig.add_subplot(gs[1, 1])
 
     fig, ax1 = mo.plot_reslt(ax1)
-    fig, ax2 = mo.plot_0Deg(ax2, given_inputs = [0,10,50])
+    fig, ax2 = mo.plot_0Deg(ax2, given_inputs = [0,10,50],ref_trans = "absorption")
 
     fig, ax3 = mo.DBRplot(ax3)
 
