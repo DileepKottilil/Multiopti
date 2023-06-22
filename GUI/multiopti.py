@@ -329,10 +329,10 @@ class multiopti:
         #self.file1_wav = 1240E-9/(self.omega) #in m
         #self.file.close
         
-        return
+        #return
 
-      elif self.source == 'none':
-        return
+      # elif self.source == 'none':
+      #   return
 
       else:
         print('ERROR: Enter the source as "experiment", "theory" or "none". ')
@@ -364,10 +364,7 @@ class multiopti:
           return
       else:
           print('Enter either 0 or 1')
-    
-    def expt(self,):
 
-        return
         
     def EM(self,wl = 300, wg = 750, w_step = 1, pol = 1,angl = np.array([0,45]),
             angle_max = 60,angle_step = 1,draw = 0):
